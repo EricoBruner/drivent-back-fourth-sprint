@@ -112,7 +112,7 @@ describe('POST /booking tests', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 404 when not sended roomId', async () => {
+    it('should respond with status 400 when not sended roomId', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -122,7 +122,7 @@ describe('POST /booking tests', () => {
 
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({});
 
-      expect(response.status).toBe(httpStatus.NOT_FOUND);
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
 
     it('should respond with status 403 when there are no vacancies in the room', async () => {
@@ -192,7 +192,7 @@ describe('PUT /booking tests', () => {
   });
 
   describe('when token is valid', () => {
-    it('should respond with status 404 when not sended roomId', async () => {
+    it('should respond with status 400 when not sended roomId', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -205,7 +205,7 @@ describe('PUT /booking tests', () => {
 
       const response = await server.put(`/booking/${booking.id}`).set('Authorization', `Bearer ${token}`).send({});
 
-      expect(response.status).toBe(httpStatus.NOT_FOUND);
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
 
     it('should respond with status 403 when there are no vacancies in the room', async () => {

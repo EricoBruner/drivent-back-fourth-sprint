@@ -1,4 +1,4 @@
-import { cannotBookingError, conflictError, notFoundError, unauthorizedError } from '@/errors';
+import { cannotBookingError, notFoundError, unauthorizedError } from '@/errors';
 import { bookingRepository, enrollmentRepository, hotelRepository, ticketsRepository } from '@/repositories';
 import { TicketStatus } from '@prisma/client';
 
@@ -10,6 +10,8 @@ async function validateUserBooking(userId: number, roomId: number) {
   if (!ticket) throw notFoundError();
 
   const room = await hotelRepository.findRoomWithBookingByRoomId(roomId);
+  if (!room) throw notFoundError();
+
   const reserved = room.Booking.length + 1;
 
   if (room.capacity < reserved) {

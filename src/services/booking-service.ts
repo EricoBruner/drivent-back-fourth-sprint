@@ -1,4 +1,4 @@
-import { cannotBookingError, notFoundError } from '@/errors';
+import { cannotBookingError, conflictError, notFoundError, unauthorizedError } from '@/errors';
 import { bookingRepository, enrollmentRepository, hotelRepository, ticketsRepository } from '@/repositories';
 import { TicketStatus } from '@prisma/client';
 
@@ -26,9 +26,9 @@ async function validateUserBooking(userId: number, roomId: number) {
 async function createBooking(userId: number, roomId: number) {
   await validateUserBooking(userId, roomId);
 
-  const { id: bookingId } = await bookingRepository.createBooking(userId, roomId);
+  const { id } = await bookingRepository.createBooking(userId, roomId);
 
-  return bookingId;
+  return id;
 }
 
 async function findBooking(userId: number) {
@@ -37,7 +37,19 @@ async function findBooking(userId: number) {
   return booking;
 }
 
+async function updateBooking(userId: number, roomId: number, bookingId: number) {
+  await validateUserBooking(userId, roomId);
+
+  const booking = await bookingRepository.findBooking(userId);
+  if (booking.id != bookingId) throw unauthorizedError();
+
+  const { id } = await bookingRepository.updateBooking(roomId, bookingId);
+
+  return id;
+}
+
 export const bookingService = {
   createBooking,
   findBooking,
+  updateBooking,
 };

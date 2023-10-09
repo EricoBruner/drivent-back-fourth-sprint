@@ -1,7 +1,7 @@
 import { init } from '@/app';
 import { cleanDb } from '../helpers';
 import { bookingService } from '@/services/booking-service';
-import { enrollmentRepository, hotelRepository, ticketsRepository } from '@/repositories';
+import { bookingRepository, enrollmentRepository, hotelRepository, ticketsRepository } from '@/repositories';
 
 beforeAll(async () => {
   await init();

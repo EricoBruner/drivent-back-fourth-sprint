@@ -43,6 +43,7 @@ async function updateBooking(userId: number, roomId: number, bookingId: number) 
   await validateUserBooking(userId, roomId);
 
   const booking = await bookingRepository.findBooking(userId);
+  if (!booking) throw cannotBookingError();
   if (booking.id != bookingId) throw unauthorizedError();
 
   const { id } = await bookingRepository.updateBooking(roomId, bookingId);
@@ -54,4 +55,5 @@ export const bookingService = {
   createBooking,
   findBooking,
   updateBooking,
+  validateUserBooking,
 };
